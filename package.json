@@ -1,0 +1,24 @@
+{
+  "name": "apiinvkus",
+  "version": "1.0.0",
+  "description": "api inventori kus",
+  "main": "index.js",
+  "scripts": {
+    "start:prod": "node ./src/server.js",
+    "start:dev": "nodemon ./src/server.js"
+  },
+  "author": "Ian Septiana",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "dotenv": "^16.3.1",
+    "mysql2": "^3.6.5",
+    "nanoid": "^3.3.7"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "nodemon": "^3.0.1"
+  }
+}
