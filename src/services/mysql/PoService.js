@@ -29,7 +29,7 @@ class PoService {
       FROM po_masuk
       LEFT JOIN masuk USING(id_msk)
       WHERE masuk.id_msk = ?
-      AND status = ?`, [id, 'INPG']);
+      AND status = ? LIMIT 1`, [id, 'INPG']);
 
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');

@@ -11,12 +11,13 @@ class ItemsService {
     });
   }
 
-  async getItemByIdBarcode(barcode) {
+  async getItemByIdBarcodeByPo(barcode, idMsk) {
     const result = await this._conn.promise().execute(`
-        SELECT barang.id_brg, brg, barcode, qty
+        SELECT id_msk, barang.id_brg, brg, id_barcode, barcode, qty
         FROM barcode_brg 
         LEFT JOIN barang USING(id_brg)
-        WHERE barcode = ?`, [barcode]);
+        LEFT JOIN po_masuk USING(id_barcode)
+        WHERE barcode = ? AND id_msk = ?`, [barcode, idMsk]);
 
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');

@@ -1,8 +1,8 @@
 const routes = (handler) => [
   {
     method: 'GET',
-    path: '/item/{barcode}',
-    handler: handler.getItemByBarcodeHandler,
+    path: '/item/{barcode}/{idMsk}',
+    handler: handler.getItemByBarcodeByPoHandler,
   },
 ];
 
