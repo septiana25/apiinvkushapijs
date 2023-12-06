@@ -1,13 +1,14 @@
 const MySQL = require('mysql2');
 const NotFoundError = require('../../exceptions/NotFoundError');
+const { mapDBToPo } = require('../../untils');
 
 class PoService {
   constructor() {
     this._conn = MySQL.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'inventorikus',
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
     });
   }
 
@@ -23,9 +24,8 @@ class PoService {
   }
 
   async getPoById(id) {
-    console.log(id);
     const result = await this._conn.promise().execute(`
-      SELECT id_po_msk, masuk.id_msk AS id_msk, suratJln
+      SELECT masuk.id_msk AS id_msk, suratJln
       FROM po_masuk
       LEFT JOIN masuk USING(id_msk)
       WHERE masuk.id_msk = ?
@@ -34,7 +34,7 @@ class PoService {
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
     }
-    return result[0];
+    return result[0].map(mapDBToPo)[0];
   }
 }
 

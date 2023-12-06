@@ -1,16 +1,25 @@
+require('dotenv').config();
+
 const Hapi = require('@hapi/hapi');
-const po = require('./api/po');
-const items = require('./api/items');
-const PoService = require('./services/mysql/PoService');
-const ItemsService = require('./services/mysql/ItemsService');
+
 const ClientError = require('./exceptions/ClientError');
+
+const po = require('./api/po');
+const PoService = require('./services/mysql/PoService');
+
+const items = require('./api/items');
+const ItemsService = require('./services/mysql/ItemsService');
+
+const shelves = require('./api/shelves');
+const ShelvesService = require('./services/mysql/ShelvesService');
 
 const init = async () => {
   const poService = new PoService();
   const itemsService = new ItemsService();
+  const shelvesService = new ShelvesService();
   const server = Hapi.server({
-    port: 3000,
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+    port: process.env.PORT,
+    host: process.env.NODE_ENV !== 'production' ? process.env.HOST : '0.0.0.0',
     routes: {
       cors: {
         origin: ['*'],
@@ -31,11 +40,17 @@ const init = async () => {
         service: poService,
       },
     },
+    {
+      plugin: shelves,
+      options: {
+        service: shelvesService,
+      },
+    },
   ]);
 
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;
-
+    console.log(response);
     if (response instanceof Error) {
       if (response instanceof ClientError) {
         const newResponse = h.response({

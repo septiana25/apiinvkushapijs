@@ -2,12 +2,12 @@ const routes = (handler) => [
   {
     method: 'GET',
     path: '/po',
-    handler: handler.getPoHandler,
+    handler: () => handler.getPoHandler(),
   },
   {
     method: 'GET',
     path: '/po/{id}',
-    handler: handler.getPoByIdHandler,
+    handler: (request, h) => handler.getPoByIdHandler(request, h),
   },
 
 ];
