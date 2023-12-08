@@ -15,7 +15,7 @@ class PoService {
   async getPo() {
     const result = await this._conn.promise().execute(`
       SELECT masuk.id_msk AS id_msk, suratJln
-      FROM po_masuk
+      FROM pomasuk
       LEFT JOIN masuk USING(id_msk)
       WHERE status = ?
       GROUP BY id_msk`, ['INPG']);
@@ -26,8 +26,26 @@ class PoService {
   async getPoById(id) {
     const result = await this._conn.promise().execute(`
       SELECT masuk.id_msk AS id_msk, suratJln
-      FROM po_masuk
+      FROM pomasuk
       LEFT JOIN masuk USING(id_msk)
+      WHERE masuk.id_msk = ?
+      AND status = ? LIMIT 1`, [id, 'INPG']);
+
+    if (!result[0].length) {
+      throw new NotFoundError('Data tidak ditemukan');
+    }
+    return result[0].map(mapDBToPo)[0];
+  }
+
+  async getPoByIdDetail(id) {
+    const result = await this._conn.promise().execute(`
+    SELECT masuk.id_msk AS id_msk, brg, rak
+      FROM pomasuk
+      LEFT JOIN masuk USING(id_msk)
+      LEFT JOIN barcodebrg USING(id_barcodebrg)
+      LEFT JOIN barang USING(id_brg)
+      LEFT JOIN barcoderak USING(id_barcoderak)
+      LEFT JOIN rak USING(id_rak)
       WHERE masuk.id_msk = ?
       AND status = ? LIMIT 1`, [id, 'INPG']);
 
