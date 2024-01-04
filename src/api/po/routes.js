@@ -9,6 +9,11 @@ const routes = (handler) => [
     path: '/po/{id}',
     handler: (request, h) => handler.getPoByIdHandler(request, h),
   },
+  {
+    method: 'GET',
+    path: '/po/{id}/detail',
+    handler: (request, h) => handler.getPoByIdDetailHandler(request, h),
+  },
 
 ];
 

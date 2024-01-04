@@ -24,6 +24,18 @@ class PoHandler {
       },
     };
   }
+
+  async getPoByIdDetailHandler(request) {
+    const { id } = request.params;
+
+    const po = await this._service.getPoByIdDetail(id);
+    return {
+      status: 'success',
+      data: {
+        po,
+      },
+    };
+  }
 }
 
 module.exports = PoHandler;

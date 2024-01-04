@@ -9,6 +9,7 @@ const PoService = require('./services/mysql/PoService');
 
 const items = require('./api/items');
 const ItemsService = require('./services/mysql/ItemsService');
+const ItemsValidator = require('./validator/items');
 
 const shelves = require('./api/shelves');
 
@@ -32,7 +33,8 @@ const init = async () => {
     {
       plugin: items,
       options: {
-        service: itemsService,
+        service: { itemsService },
+        validator: ItemsValidator,
       },
     },
     {

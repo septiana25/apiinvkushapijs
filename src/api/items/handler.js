@@ -1,6 +1,21 @@
 class ItemHandler {
-  constructor(service) {
-    this._service = service;
+  constructor(itemsService, validator) {
+    this._service = itemsService;
+    this._validator = validator;
+  }
+
+  async postItemHandler(request, h) {
+    console.log(request);
+    this._validator.validateItemPayload(request.payload);
+    const { idBrg, barcodeBrg, qty } = request.payload;
+    // await this._service.addItem({ idBrg, barcodeBrg, qty });
+
+    /* const response = h.response({
+      status: 'success',
+      message: 'Item berhasil ditambahkan',
+    });
+    response.code(201);
+    return response; */
   }
 
   async getItemByBarcodeByPoHandler(request) {
