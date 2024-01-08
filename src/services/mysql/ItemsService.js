@@ -36,6 +36,24 @@ class ItemsService {
     console.log(result[0]);
     return result[0].map(mapDBToItem)[0];
   }
+
+  async getItemByBarcodeShelf(barcode, month, year) {
+    const zeroSaldo = 0;
+    const result = await this._conn.execute(`
+    SELECT id_brg, brg, rak, saldo_awal, saldo_akhir
+    FROM detail_brg
+    LEFT JOIN barang USING(id_brg)
+    LEFT JOIN barcoderak USING(id_rak)
+    LEFT JOIN rak USING(id_rak)
+    LEFT JOIN saldo USING(id)
+    WHERE MONTH(tgl)=?  AND YEAR(tgl)=? AND saldo_akhir !=? AND barcode_rak = ?
+    ORDER BY rak, brg ASC`, [month, year, zeroSaldo, barcode]);
+    if (!result[0].length) {
+      throw new NotFoundError('Data tidak ditemukan');
+    }
+    console.log(result[0]);
+    return result[0];
+  }
 }
 
 module.exports = ItemsService;

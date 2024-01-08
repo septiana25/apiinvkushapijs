@@ -29,6 +29,22 @@ class ItemHandler {
       },
     };
   }
+
+  async getItemByShelfByBarcodeHandler(request) {
+    const { barcode } = request.params;
+    const currentDate = new Date();
+    const options = { timeZone: 'Asia/Jakarta', month: '2-digit' };
+    const month = currentDate.toLocaleString('en-US', options);
+    const year = currentDate.getFullYear();
+    const items = await this._service.getItemByBarcodeShelf(barcode, month, year);
+
+    return {
+      status: 'success',
+      data: {
+        items,
+      },
+    };
+  }
 }
 
 module.exports = ItemHandler;
