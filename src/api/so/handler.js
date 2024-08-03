@@ -13,14 +13,33 @@ class PoHandler {
     };
   }
 
-  async getPoByIdHandler(request) {
-    const { id } = request.params;
+  async getSoByNopolHandler(request) {
+    const { nopol } = request.params;
 
-    const po = await this._service.getPoById(id);
+    const soList = await this._service.getSoByNopol(nopol);
+    // Mengelompokkan hasil berdasarkan nopol, supir, dan jenis
+    const groupedSo = soList.reduce((acc, item) => {
+      const key = `${item.nopol}_${item.supir}_${item.jenis}`;
+      if (!acc[key]) {
+        acc[key] = {
+          nopol: item.nopol,
+          supir: item.supir,
+          jenis: item.jenis,
+          items: [],
+        };
+      }
+      // Menghapus properti nopol, supir, dan jenis dari item
+      const {
+        nopol: _, supir: __, jenis: ___, ...itemWithoutNopolSupirJenis
+      } = item;
+      acc[key].items.push(itemWithoutNopolSupirJenis);
+      return acc;
+    }, {});
+
     return {
       status: 'success',
       data: {
-        po,
+        so: Object.values(groupedSo),
       },
     };
   }

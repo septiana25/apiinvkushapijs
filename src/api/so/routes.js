@@ -7,7 +7,7 @@ const routes = (handler) => [
   {
     method: 'GET',
     path: '/so/{nopol}',
-    handler: (request, h) => handler.getSoByIdHandler(request, h),
+    handler: (request, h) => handler.getSoByNopolHandler(request, h),
   },
   {
     method: 'GET',
