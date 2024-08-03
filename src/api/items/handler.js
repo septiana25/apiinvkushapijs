@@ -8,14 +8,14 @@ class ItemHandler {
     console.log(request);
     this._validator.validateItemPayload(request.payload);
     const { idBrg, barcodeBrg, qty } = request.payload;
-    // await this._service.addItem({ idBrg, barcodeBrg, qty });
+    await this._service.addItem({ idBrg, barcodeBrg, qty });
 
-    /* const response = h.response({
+    const response = h.response({
       status: 'success',
       message: 'Item berhasil ditambahkan',
     });
     response.code(201);
-    return response; */
+    return response;
   }
 
   async getItemByBarcodeByPoHandler(request) {
@@ -32,11 +32,16 @@ class ItemHandler {
 
   async getItemByShelfByBarcodeHandler(request) {
     const { barcode } = request.params;
-    const currentDate = new Date();
+    /* const currentDate = new Date();
     const options = { timeZone: 'Asia/Jakarta', month: '2-digit' };
     const month = currentDate.toLocaleString('en-US', options);
-    const year = currentDate.getFullYear();
+    const year = currentDate.getFullYear(); */
+    // check database apakah sudah peremajaan
+    const dateBalance = await this._service.getDateBalance();
+    const { month, year } = dateBalance[0];
+
     const items = await this._service.getItemByBarcodeShelf(barcode, month, year);
+    console.log(items);
 
     return {
       status: 'success',

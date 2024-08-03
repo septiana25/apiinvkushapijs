@@ -25,7 +25,7 @@ class ItemsService {
 
   async getItemByIdBarcodeByPo(barcode, idMsk) {
     const result = await this._conn.execute(`
-        SELECT id_msk, barang.id_brg, brg, barcode_brg, qty
+        SELECT id_msk, barang.id_brg, brg, barcode_brg, qty, limit_rak
         FROM barcodebrg 
         LEFT JOIN barang USING(id_brg)
         LEFT JOIN pomasuk USING(id_barcodebrg)
@@ -35,6 +35,15 @@ class ItemsService {
     }
     console.log(result[0]);
     return result[0].map(mapDBToItem)[0];
+  }
+
+  async getDateBalance() {
+    const result = await this._conn.execute(`
+    SELECT MONTH(tgl) as month, YEAR(tgl) as year 
+    FROM saldo
+    ORDER BY tgl DESC
+    limit 1`);
+    return result[0];
   }
 
   async getItemByBarcodeShelf(barcode, month, year) {
