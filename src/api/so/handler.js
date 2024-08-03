@@ -1,4 +1,4 @@
-class PoHandler {
+class SoHandler {
   constructor(service) {
     this._service = service;
   }
@@ -25,14 +25,14 @@ class PoHandler {
           nopol: item.nopol,
           supir: item.supir,
           jenis: item.jenis,
-          items: [],
+          details: [],
         };
       }
       // Menghapus properti nopol, supir, dan jenis dari item
       const {
         nopol: _, supir: __, jenis: ___, ...itemWithoutNopolSupirJenis
       } = item;
-      acc[key].items.push(itemWithoutNopolSupirJenis);
+      acc[key].details.push(itemWithoutNopolSupirJenis);
       return acc;
     }, {});
 
@@ -57,4 +57,4 @@ class PoHandler {
   }
 }
 
-module.exports = PoHandler;
+module.exports = SoHandler;
