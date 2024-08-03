@@ -7,6 +7,9 @@ const ClientError = require('./exceptions/ClientError');
 const po = require('./api/po');
 const PoService = require('./services/mysql/PoService');
 
+const so = require('./api/so');
+const SoService = require('./services/mysql/SoService');
+
 const items = require('./api/items');
 const ItemsService = require('./services/mysql/ItemsService');
 const ItemsValidator = require('./validator/items');
@@ -19,6 +22,7 @@ const init = async () => {
   const poService = new PoService();
   const itemsService = new ItemsService();
   const shelvesService = new ShelvesService();
+  const soService = new SoService();
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.NODE_ENV !== 'production' ? process.env.HOST : '0.0.0.0',
@@ -47,6 +51,12 @@ const init = async () => {
       plugin: shelves,
       options: {
         service: shelvesService,
+      },
+    },
+    {
+      plugin: so,
+      options: {
+        service: soService,
       },
     },
   ]);
