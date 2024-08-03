@@ -20,7 +20,7 @@ class SoService {
             LEFT JOIN tmp_salesorder USING(id_so)
             LEFT JOIN ekspedisi USING(nopol)
             WHERE no_nota IS NULL
-            GROUP BY nopol`);
+            GROUP BY nopol ORDER BY tgl ASC`);
     // console.log(result[0].length);
     return result[0];
   }
