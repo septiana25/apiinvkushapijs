@@ -36,7 +36,7 @@ class SoService {
             LEFT JOIN detail_brg USING(id)
             LEFT JOIN barang USING(id_brg)
             LEFT JOIN rak USING(id_rak)
-            WHERE no_nota IS NULL AND nopol = ?
+            WHERE no_nota IS NULL AND tmp_prossessso.at_update IS NULL AND nopol = ?
             GROUP BY detail_brg.id`, [nopol]);
 
     if (!result[0].length) {
