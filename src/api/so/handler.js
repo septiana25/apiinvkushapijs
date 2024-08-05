@@ -3,6 +3,37 @@ class SoHandler {
     this._service = service;
   }
 
+  async postPickerSoHandler(request, h) {
+    try {
+      const { nopol, id } = request.payload;
+      const so = await this._service.getSoByNopolByid(nopol, id);
+      if (!so || !Array.isArray(so) || so.length === 0) {
+        const response = h.response({
+          status: 'fail',
+          message: 'Data SO tidak ditemukan',
+        });
+        response.code(404);
+        return response;
+      }
+      // Memperbarui at_update untuk setiap id_pro
+      const updatePromises = so.map((item) => this._service.updateAtUpdate(item.id_pro));
+      await Promise.all(updatePromises);
+      const response = h.response({
+        status: 'success',
+        message: 'SO berhasil diperbarui',
+      });
+      response.code(200);
+      return response;
+    } catch (error) {
+      const response = h.response({
+        status: 'error',
+        message: 'Terjadi kesalahan pada server',
+      });
+      response.code(500);
+      return response;
+    }
+  }
+
   async getSoHandler() {
     const so = await this._service.getSo();
     return {

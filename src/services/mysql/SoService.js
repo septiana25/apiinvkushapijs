@@ -44,6 +44,21 @@ class SoService {
     }
     return result[0];
   }
+
+  async getSoByNopolByid(nopol, id) {
+    const result = await this._conn.promise().execute(`
+       SELECT id_pro
+          FROM tmp_prossessso
+          LEFT JOIN tmp_salesorder USING(id_so)
+          LEFT JOIN detail_saldo USING(id_detailsaldo) 
+          WHERE no_nota IS NULL AND nopol = ? AND id = ?`, [nopol, id]);
+    return result[0];
+  }
+
+  async updateAtUpdate(idPro) {
+    const query = 'UPDATE tmp_prossessso SET at_update = CURRENT_TIMESTAMP WHERE id_pro = ?';
+    await this._conn.promise().execute(query, [idPro]);
+  }
 }
 
 module.exports = SoService;

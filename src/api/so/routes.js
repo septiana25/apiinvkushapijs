@@ -1,5 +1,10 @@
 const routes = (handler) => [
   {
+    method: 'POST',
+    path: '/so/picker_so',
+    handler: (request, h) => handler.postPickerSoHandler(request, h),
+  },
+  {
     method: 'GET',
     path: '/so',
     handler: () => handler.getSoHandler(),
