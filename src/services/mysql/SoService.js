@@ -37,7 +37,7 @@ class SoService {
             LEFT JOIN barang USING(id_brg)
             LEFT JOIN rak USING(id_rak)
             WHERE no_nota IS NULL AND nopol = ?
-            GROUP BY kdbrg, rak`, [nopol]);
+            GROUP BY detail_brg.id`, [nopol]);
 
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');

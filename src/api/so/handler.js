@@ -36,6 +36,25 @@ class SoHandler {
       return acc;
     }, {});
 
+    // Fungsi untuk mengurutkan rak
+    const sortRak = (a, b) => {
+      const aMatch = a.rak.match(/([A-Za-z]+)(\d+)\.(\d+)/);
+      const bMatch = b.rak.match(/([A-Za-z]+)(\d+)\.(\d+)/);
+      if (aMatch && bMatch) {
+        if (aMatch[1] !== bMatch[1]) return aMatch[1].localeCompare(bMatch[1]);
+        const a2 = parseInt(aMatch[2], 10);
+        const b2 = parseInt(bMatch[2], 10);
+        if (a2 !== b2) return a2 - b2;
+        return parseInt(aMatch[3], 10) - parseInt(bMatch[3], 10);
+      }
+      return a.rak.localeCompare(b.rak);
+    };
+
+    // Mengurutkan details untuk setiap grup
+    Object.values(groupedSo).forEach((group) => {
+      group.details.sort(sortRak);
+    });
+
     return {
       status: 'success',
       data: {
