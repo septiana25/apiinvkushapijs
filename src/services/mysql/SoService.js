@@ -19,7 +19,7 @@ class SoService {
             FROM tmp_prossessso
             LEFT JOIN tmp_salesorder USING(id_so)
             LEFT JOIN ekspedisi USING(nopol)
-            WHERE no_nota IS NULL
+            WHERE no_nota IS NULL AND tmp_prossessso.at_update IS NULL
             GROUP BY nopol ORDER BY tgl ASC`);
     // console.log(result[0].length);
     return result[0];
