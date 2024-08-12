@@ -37,6 +37,13 @@ class ItemsService {
     return result[0].map(mapDBToItem)[0];
   }
 
+  async getItemByBarcode(barcode) {
+    const result = await this._conn.execute(`
+    SELECT id_brg, barcode_brg, qty AS qty_pack FROM barcodebrg WHERE barcode_brg = ?`, [barcode]);
+
+    return result[0];
+  }
+
   async getDateBalance() {
     const result = await this._conn.execute(`
     SELECT MONTH(tgl) as month, YEAR(tgl) as year 

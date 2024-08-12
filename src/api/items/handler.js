@@ -30,6 +30,18 @@ class ItemHandler {
     };
   }
 
+  async getItemByBarcodeHandler(request) {
+    const { barcode } = request.params;
+    const item = await this._service.getItemByBarcode(barcode);
+
+    return {
+      status: 'success',
+      data: {
+        item,
+      },
+    };
+  }
+
   async getItemByShelfByBarcodeHandler(request) {
     const { barcode } = request.params;
     /* const currentDate = new Date();
