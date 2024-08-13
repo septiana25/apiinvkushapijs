@@ -16,6 +16,11 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
+    path: '/so/{nopol}/{id}',
+    handler: (request, h) => handler.getSoByIdNopolHandler(request, h),
+  },
+  {
+    method: 'GET',
     path: '/so/{id}/detail',
     handler: (request, h) => handler.getSoByIdDetailHandler(request, h),
   },

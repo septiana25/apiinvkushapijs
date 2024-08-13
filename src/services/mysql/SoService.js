@@ -27,7 +27,7 @@ class SoService {
 
   async getSoByNopol(nopol) {
     const result = await this._conn.promise().execute(`
-        SELECT id_pro, detail_brg.id, id_detailsaldo, jenis, nopol, supir, id_toko, toko.toko AS toko, id_brg, barang.kdbrg, barang.brg, rak, tahunprod, qty_pro
+        SELECT id_pro, detail_brg.id, id_detailsaldo, jenis, nopol, supir, id_toko, toko.toko AS toko, id_brg, barang.kdbrg, barang.brg, rak, tahunprod, SUM(qty_pro) AS qty_pro
             FROM tmp_prossessso
             LEFT JOIN tmp_salesorder USING(id_so)
             LEFT JOIN ekspedisi USING(nopol)
@@ -37,7 +37,7 @@ class SoService {
             LEFT JOIN barang USING(id_brg)
             LEFT JOIN rak USING(id_rak)
             WHERE no_nota IS NULL AND tmp_prossessso.at_update IS NULL AND nopol = ?
-            `, [nopol]);
+            GROUP BY detail_brg.id`, [nopol]);
 
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
@@ -47,10 +47,11 @@ class SoService {
 
   async getSoByNopolByid(nopol, id) {
     const result = await this._conn.promise().execute(`
-       SELECT id_pro
+       SELECT id_pro, id_toko, toko.toko AS toko, qty_pro
           FROM tmp_prossessso
           LEFT JOIN tmp_salesorder USING(id_so)
-          LEFT JOIN detail_saldo USING(id_detailsaldo) 
+          LEFT JOIN detail_saldo USING(id_detailsaldo)
+          LEFT JOIN toko USING(kode_toko)
           WHERE no_nota IS NULL AND nopol = ? AND id = ?`, [nopol, id]);
     return result[0];
   }

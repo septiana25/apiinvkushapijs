@@ -94,6 +94,17 @@ class SoHandler {
     };
   }
 
+  async getSoByIdNopolHandler(request) {
+    const { nopol, id } = request.params;
+    const so = await this._service.getSoByNopolByid(nopol, id);
+    return {
+      status: 'success',
+      data: {
+        so,
+      },
+    };
+  }
+
   async getPoByIdDetailHandler(request) {
     const { id } = request.params;
 
