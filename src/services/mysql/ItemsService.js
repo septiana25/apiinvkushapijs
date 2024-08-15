@@ -56,14 +56,15 @@ class ItemsService {
   async getItemByBarcodeShelf(barcode, month, year) {
     const zeroSaldo = 0;
     const result = await this._conn.execute(`
-    SELECT id_brg, brg, rak, saldo_awal, saldo_akhir
-    FROM detail_brg
-    LEFT JOIN barang USING(id_brg)
-    LEFT JOIN barcoderak USING(id_rak)
-    LEFT JOIN rak USING(id_rak)
-    LEFT JOIN saldo USING(id)
-    WHERE MONTH(tgl)=?  AND YEAR(tgl)=? AND saldo_akhir !=? AND barcode_rak = ?
-    ORDER BY rak, brg ASC`, [month, year, zeroSaldo, barcode]);
+      SELECT id_brg, brg, rak, saldo_awal, saldo_akhir, jumlah, tahunprod
+      FROM detail_brg
+      LEFT JOIN detail_saldo USING(id)
+      LEFT JOIN barang USING(id_brg)
+      LEFT JOIN barcoderak USING(id_rak)
+      LEFT JOIN rak USING(id_rak)
+      LEFT JOIN saldo USING(id)
+      WHERE MONTH(tgl)=?  AND YEAR(tgl)=? AND jumlah !=? AND barcode_rak = ?
+      ORDER BY rak, brg ASC`, [month, year, zeroSaldo, barcode]);
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
     }
