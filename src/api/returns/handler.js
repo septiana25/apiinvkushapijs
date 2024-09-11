@@ -6,7 +6,10 @@ class ReturnsHandler {
   }
 
   async postReturnsHandler(request, h) {
-    const { idRak, barcode, unit } = request.payload;
+    const {
+      idRak, barcode, unit, user,
+    } = request.payload;
+    console.log(request.payload);
 
     try {
       const item = await this._itemsService.getItemByBarcode(barcode);
@@ -21,7 +24,8 @@ class ReturnsHandler {
       const qty = unit === 'pack' ? qty_pack : 1;
 
       // Mencoba menyimpan returns
-      const result = await this._returnsService.postReturns(id_brg, idRak, qty);
+      const result = await this._returnsService.postReturns(id_brg, idRak, qty, user);
+      console.log(result);
       if (result.affectedRows === 0) {
         // Jika penyimpanan gagal
         return h.response({
@@ -31,10 +35,10 @@ class ReturnsHandler {
       }
 
       // Jika penyimpanan berhasil
-      return h.response({
+      return {
         status: 'success',
         message: 'Data berhasil ditambahkan',
-      }).code(201);
+      };
     } catch (error) {
       return h.response({
         status: 'error',

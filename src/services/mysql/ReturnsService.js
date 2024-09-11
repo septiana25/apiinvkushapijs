@@ -13,18 +13,18 @@ class ReturnsService {
     });
   }
 
-  async postReturns(idBrg, idRak, qty) {
+  async postReturns(idBrg, idRak, qty, user) {
     const query = `
-      INSERT INTO tmp_retur (id_brg, id_rak, qty, sisa_qty)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO tmp_retur (id_brg, id_rak, qty, sisa_qty, user)
+      VALUES (?, ?, ?, ?, ?)
     `;
-    const result = await this._conn.promise().execute(query, [idBrg, idRak, qty, qty]);
+    const result = await this._conn.promise().execute(query, [idBrg, idRak, qty, qty, user]);
     return result[0];
   }
 
   async getReturns() {
     const result = await this._conn.promise().execute(`
-      SELECT id_brg, brg, rak, sum(qty) as sisa
+      SELECT id_brg, id_rak, brg, rak, sum(qty) as sisa
         FROM tmp_retur
         LEFT JOIN barang USING(id_brg)
         LEFT JOIN rak USING(id_rak)
