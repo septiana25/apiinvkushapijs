@@ -13,14 +13,23 @@ class ReturnsService {
     });
   }
 
+  async postReturns(idBrg, idRak, qty) {
+    const query = `
+      INSERT INTO tmp_retur (id_brg, id_rak, qty, sisa_qty)
+      VALUES (?, ?, ?, ?)
+    `;
+    const result = await this._conn.promise().execute(query, [idBrg, idRak, qty, qty]);
+    return result[0];
+  }
+
   async getReturns() {
     const result = await this._conn.promise().execute(`
-      SELECT id, brg, rak, sisa_qty as sisa
+      SELECT id_brg, brg, rak, sum(qty) as sisa
         FROM tmp_retur
-        LEFT JOIN detail_brg USING(id)
         LEFT JOIN barang USING(id_brg)
         LEFT JOIN rak USING(id_rak)
-        WHERE sisa_qty > ?`, [0]);
+        WHERE sisa_qty > ?
+        GROUP BY id_brg, id_rak`, [0]);
     // console.log(result[0].length);
     return result[0];
   }

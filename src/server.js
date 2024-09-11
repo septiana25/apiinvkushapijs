@@ -66,6 +66,7 @@ const init = async () => {
       plugin: returns,
       options: {
         service: returnsService,
+        itemsService,
       },
     },
   ]);
