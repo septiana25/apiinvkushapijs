@@ -71,6 +71,25 @@ class ItemsService {
     console.log(result[0]);
     return result[0];
   }
+
+  async getItemByBarcodeItem(barcode, month, year) {
+    const zeroSaldo = 0;
+    const result = await this._conn.execute(`
+      SELECT id_brg, brg, rak, saldo_awal, saldo_akhir, jumlah, tahunprod
+      FROM detail_brg
+      LEFT JOIN detail_saldo USING(id)
+      LEFT JOIN barang USING(id_brg)
+      LEFT JOIN barcodebrg USING(id_brg)
+      LEFT JOIN rak USING(id_rak)
+      LEFT JOIN saldo USING(id)
+      WHERE MONTH(tgl)=?  AND YEAR(tgl)=? AND jumlah !=? AND barcode_brg = ?
+      ORDER BY brg ASC`, [month, year, zeroSaldo, barcode]);
+    if (!result[0].length) {
+      throw new NotFoundError('Data tidak ditemukan');
+    }
+    console.log(result[0]);
+    return result[0];
+  }
 }
 
 module.exports = ItemsService;

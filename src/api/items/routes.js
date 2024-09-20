@@ -19,6 +19,11 @@ const routes = (handler) => [
     path: '/item/shelf/{barcode}',
     handler: (request, h) => handler.getItemByShelfByBarcodeHandler(request, h),
   },
+  {
+    method: 'GET',
+    path: '/item/item/{barcode}',
+    handler: (request, h) => handler.getItemByBarcodeItemHandler(request, h),
+  },
 ];
 
 module.exports = routes;

@@ -76,6 +76,41 @@ class ItemHandler {
       },
     };
   }
+
+  async getItemByBarcodeItemHandler(request) {
+    const { barcode } = request.params;
+
+    // check database apakah sudah peremajaan
+    const dateBalance = await this._service.getDateBalance();
+    const { month, year } = dateBalance[0];
+
+    const items = await this._service.getItemByBarcodeItem(barcode, month, year);
+    // gourping by item same
+    const itemGroup = items.reduce((acc, item) => {
+      const key = `${item.id_brg}_${item.brg}_${item.saldo_awal}_${item.saldo_akhir}`;
+      if (!acc[key]) {
+        acc[key] = {
+          id_brg: item.id_brg,
+          brg: item.brg,
+          saldo_awal: item.saldo_awal,
+          saldo_akhir: item.saldo_akhir,
+          details: [],
+        };
+      }
+      const {
+        id_brg: _, brg: __, saldo_awal: ___, saldo_akhir: ____, ...itemWithout
+      } = item;
+      acc[key].details.push(itemWithout);
+
+      return acc;
+    }, {});
+    return {
+      status: 'success',
+      data: {
+        items: Object.values(itemGroup),
+      },
+    };
+  }
 }
 
 module.exports = ItemHandler;
