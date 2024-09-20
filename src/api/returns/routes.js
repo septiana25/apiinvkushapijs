@@ -11,10 +11,9 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/returns/{barcode}',
-    handler: (request, h) => handler.getReturnsByBarcodeHandler(request, h),
+    path: '/returns/{idRak}',
+    handler: (request) => handler.getReturnsByRakHandler(request),
   },
-
 ];
 
 module.exports = routes;

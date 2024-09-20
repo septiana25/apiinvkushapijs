@@ -33,6 +33,17 @@ class ReturnsService {
     // console.log(result[0].length);
     return result[0];
   }
+
+  async getReturnsByRak(idRak) {
+    const result = await this._conn.promise().execute(`
+      SELECT id_brg, id_rak, brg, rak, sum(qty) as sisa
+        FROM tmp_retur
+        LEFT JOIN barang USING(id_brg)
+        LEFT JOIN rak USING(id_rak)
+        WHERE id_rak = ? AND sisa_qty > ?
+        GROUP BY id_brg, id_rak`, [idRak, 0]);
+    return result[0];
+  }
 }
 
 module.exports = ReturnsService;

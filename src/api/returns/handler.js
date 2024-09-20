@@ -56,6 +56,15 @@ class ReturnsHandler {
       },
     };
   }
+
+  async getReturnsByRakHandler(request) {
+    const { idRak } = request.params;
+    const returns = await this._returnsService.getReturnsByRak(idRak);
+    return {
+      status: 'success',
+      data: { returns },
+    };
+  }
 }
 
 module.exports = ReturnsHandler;
