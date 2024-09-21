@@ -100,10 +100,35 @@ class ItemHandler {
       const {
         id_brg: _, brg: __, saldo_awal: ___, saldo_akhir: ____, ...itemWithout
       } = item;
-      acc[key].details.push(itemWithout);
+      // Konversi tahunprod menjadi tanggal
+      const weekProd = parseInt(itemWithout.tahunprod.substring(0, 2), 10);
+      const yearProd = parseInt(`20${itemWithout.tahunprod.substring(2)}`, 10);
+      const dateProd = new Date(Date.UTC(yearProd, 0, 1));
+      dateProd.setUTCDate(dateProd.getUTCDate() + (weekProd - 1) * 7);
+      // Konversi ke zona waktu Asia/Jakarta
+      const dateJakarta = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(dateProd);
+      console.log(`tahunprod: ${itemWithout.tahunprod}`);
+      console.log(`weekProd: ${weekProd}, yearProd: ${yearProd}`);
+      console.log(`dateProd: ${dateProd.toISOString()}`);
+      acc[key].details.push({ ...itemWithout, prodDate: dateJakarta });
 
       return acc;
     }, {});
+
+    // Urutkan details berdasarkan prodDate
+    Object.values(itemGroup).forEach((group) => {
+      group.details.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.prodDate.split('/');
+        const [dayB, monthB, yearB] = b.prodDate.split('/');
+        return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+      });
+    });
+
     return {
       status: 'success',
       data: {
