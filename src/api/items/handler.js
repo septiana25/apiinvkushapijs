@@ -87,16 +87,19 @@ class ItemHandler {
     const items = await this._service.getItemByBarcodeItem(barcode, month, year);
     // gourping by item same
     const itemGroup = items.reduce((acc, item) => {
-      const key = `${item.id_brg}_${item.brg}_${item.saldo_awal}_${item.saldo_akhir}`;
+      const key = `${item.id_brg}`;
       if (!acc[key]) {
         acc[key] = {
           id_brg: item.id_brg,
           brg: item.brg,
           saldo_awal: item.saldo_awal,
-          saldo_akhir: item.saldo_akhir,
+          saldo_akhir: 0,
           details: [],
         };
       }
+
+      // Tambahkan saldo_akhir
+      acc[key].saldo_akhir += item.jumlah;
       const {
         id_brg: _, brg: __, saldo_awal: ___, saldo_akhir: ____, ...itemWithout
       } = item;
@@ -112,9 +115,7 @@ class ItemHandler {
         month: '2-digit',
         day: '2-digit',
       }).format(dateProd);
-      console.log(`tahunprod: ${itemWithout.tahunprod}`);
-      console.log(`weekProd: ${weekProd}, yearProd: ${yearProd}`);
-      console.log(`dateProd: ${dateProd.toISOString()}`);
+
       acc[key].details.push({ ...itemWithout, prodDate: dateJakarta });
 
       return acc;
