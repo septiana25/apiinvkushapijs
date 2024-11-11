@@ -20,12 +20,16 @@ const ShelvesService = require('./services/mysql/ShelvesService');
 const returns = require('./api/returns');
 const ReturnsService = require('./services/mysql/ReturnsService');
 
+const mutasi = require('./api/mutasi');
+const MutasiService = require('./services/mysql/MutasiService');
+
 const init = async () => {
   const poService = new PoService();
   const itemsService = new ItemsService();
   const shelvesService = new ShelvesService();
   const soService = new SoService();
   const returnsService = new ReturnsService();
+  const mutasiService = new MutasiService();
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.NODE_ENV !== 'production' ? process.env.HOST : '0.0.0.0',
@@ -66,6 +70,13 @@ const init = async () => {
       plugin: returns,
       options: {
         service: returnsService,
+        itemsService,
+      },
+    },
+    {
+      plugin: mutasi,
+      options: {
+        service: mutasiService,
         itemsService,
       },
     },

@@ -7,24 +7,13 @@ class MutasiHandler {
 
   async postMutasiHandler(request, h) {
     const {
-      idRak, barcode, unit, user,
+      idDetailSaldo, idRak, qty, user,
     } = request.payload;
     console.log(request.payload);
 
     try {
-      const item = await this._itemsService.getItemByBarcode(barcode);
-      if (!item || item.length === 0) {
-        return h.response({
-          status: 'fail',
-          message: 'Item tidak ditemukan',
-        }).code(404);
-      }
-
-      const { id_brg, qty_pack } = item[0];
-      const qty = unit === 'pack' ? qty_pack : 1;
-
       // Mencoba menyimpan mutasi
-      const result = await this._mutasiService.postMutasi(id_brg, idRak, qty, user);
+      const result = await this._mutasiService.postMutasi(idDetailSaldo, idRak, qty, user);
       console.log(result);
       if (result.affectedRows === 0) {
         // Jika penyimpanan gagal
@@ -48,11 +37,11 @@ class MutasiHandler {
   }
 
   async getMutasiHandler() {
-    const mutasi = await this._mutasiService.getMutasi();
+    // const mutasi = await this._mutasiService.getMutasi();
     return {
       status: 'success',
       data: {
-        mutasi,
+        test: 'test',
       },
     };
   }

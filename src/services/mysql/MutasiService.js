@@ -13,12 +13,12 @@ class MutasiService {
     });
   }
 
-  async postReturns(idBrg, idRak, qty, user) {
+  async postMutasi(idDetailSaldo, idRak, qty, user) {
     const query = `
-      INSERT INTO tmp_retur (id_brg, id_rak, qty, sisa_qty, user)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO tmp_mutasi (id_detailsaldo, id_rak, qty, user)
+      VALUES (?, ?, ?, ?)
     `;
-    const result = await this._conn.promise().execute(query, [idBrg, idRak, qty, qty, user]);
+    const result = await this._conn.promise().execute(query, [idDetailSaldo, idRak, qty, user]);
     return result[0];
   }
 
