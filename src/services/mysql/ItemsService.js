@@ -33,7 +33,6 @@ class ItemsService {
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
     }
-    console.log(result[0]);
     return result[0].map(mapDBToItem)[0];
   }
 
@@ -56,7 +55,7 @@ class ItemsService {
   async getItemByBarcodeShelf(barcode, month, year) {
     const zeroSaldo = 0;
     const result = await this._conn.execute(`
-      SELECT id_brg, brg, rak, saldo_awal, saldo_akhir, jumlah, tahunprod
+      SELECT id_brg, id_detailsaldo, brg, rak, saldo_awal, saldo_akhir, jumlah, tahunprod
       FROM detail_brg
       LEFT JOIN detail_saldo USING(id)
       LEFT JOIN barang USING(id_brg)
@@ -68,7 +67,6 @@ class ItemsService {
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
     }
-    console.log(result[0]);
     return result[0];
   }
 
@@ -87,8 +85,22 @@ class ItemsService {
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
     }
-    console.log(result[0]);
     return result[0];
+  }
+
+  async getItemByDetailSaldo(idDetailSaldo) {
+    const result = await this._conn.execute(`
+    SELECT id_detailsaldo, id, id_brg, brg, id_rak, rak, tahunprod, jumlah
+    FROM detail_saldo
+    LEFT JOIN detail_brg USING(id)
+    LEFT JOIN barang USING(id_brg)
+    LEFT JOIN rak USING(id_rak)
+    WHERE id_detailsaldo = ?`, [idDetailSaldo]);
+
+    if (!result[0].length) {
+      throw new NotFoundError('Data tidak ditemukan');
+    }
+    return result[0][0];
   }
 }
 

@@ -24,6 +24,11 @@ const routes = (handler) => [
     path: '/item/item/{barcode}',
     handler: (request, h) => handler.getItemByBarcodeItemHandler(request, h),
   },
+  {
+    method: 'GET',
+    path: '/item/detailSaldo/{idDetailSaldo}',
+    handler: (request, h) => handler.getItemByDetailSaldoHandler(request, h),
+  },
 ];
 
 module.exports = routes;

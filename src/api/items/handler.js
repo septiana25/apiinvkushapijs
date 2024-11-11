@@ -137,6 +137,16 @@ class ItemHandler {
       },
     };
   }
+
+  async getItemByDetailSaldoHandler(request) {
+    const { idDetailSaldo } = request.params;
+    const data = await this._service.getItemByDetailSaldo(idDetailSaldo);
+
+    return {
+      status: 'success',
+      data,
+    };
+  }
 }
 
 module.exports = ItemHandler;
