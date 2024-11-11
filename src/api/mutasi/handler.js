@@ -12,6 +12,14 @@ class MutasiHandler {
     console.log(request.payload);
 
     try {
+      const isUnprocessed = await this._mutasiService.getMutasiUnprocessed(idDetailSaldo);
+      console.log(isUnprocessed);
+      if (isUnprocessed) {
+        return h.response({
+          status: 'fail',
+          message: 'Mutasi item ini sedang di proses',
+        }).code(400);
+      }
       // Mencoba menyimpan mutasi
       const result = await this._mutasiService.postMutasi(idDetailSaldo, idRak, qty, user);
       console.log(result);

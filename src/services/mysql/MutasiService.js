@@ -1,5 +1,5 @@
 const MySQL = require('mysql2');
-// const NotFoundError = require('../../exceptions/NotFoundError');
+const NotFoundError = require('../../exceptions/NotFoundError');
 // const { mapDBToRak } = require('../../untils');
 
 class MutasiService {
@@ -30,18 +30,35 @@ class MutasiService {
         LEFT JOIN rak USING(id_rak)
         WHERE sisa_qty > ?
         GROUP BY id_brg, id_rak`, [0]);
-    // console.log(result[0].length);
+    if (!result[0].length) {
+      throw new NotFoundError('Data tidak ditemukan');
+    }
     return result[0];
+  }
+
+  async getMutasiUnprocessed(idDetailSaldo) {
+    const result = await this._conn.promise().execute(`
+      SELECT id_mutasi
+        FROM tmp_mutasi
+        WHERE id_detailsaldo = ? AND at_update IS NULL
+        `, [idDetailSaldo]);
+    if (!result[0].length) {
+      return false;
+    }
+    return true;
   }
 
   async getMutasiByDetailSaldo(idDetailSaldo) {
     const result = await this._conn.promise().execute(`
       SELECT id_brg, id_rak, brg, rak, sum(qty) as sisa
-        FROM tmp_retur
+        FROM tmp_mutasi
         LEFT JOIN barang USING(id_brg)
         LEFT JOIN rak USING(id_rak)
         WHERE id_detail_saldo = ? AND sisa_qty > ?
         GROUP BY id_brg, id_rak`, [idDetailSaldo, 0]);
+    if (!result[0].length) {
+      throw new NotFoundError('Data tidak ditemukan');
+    }
     return result[0];
   }
 }
