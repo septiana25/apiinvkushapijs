@@ -24,12 +24,21 @@ class MutasiService {
 
   async getMutasi() {
     const result = await this._conn.promise().execute(`
-      SELECT id_brg, id_rak, brg, rak, sum(qty) as sisa
-        FROM tmp_retur
-        LEFT JOIN barang USING(id_brg)
-        LEFT JOIN rak USING(id_rak)
-        WHERE sisa_qty > ?
-        GROUP BY id_brg, id_rak`, [0]);
+      SELECT id_mutasi, tujuan.id_detailsaldo, id_asal, brg, rak_asal, rak_tujuan, tahunprod, qty
+      FROM (
+        SELECT id_mutasi, id_detailsaldo, id, rak AS rak_tujuan, tahunprod, qty
+        FROM tmp_mutasi AS mutasi
+          LEFT JOIN detail_saldo AS d_saldo USING(id_detailsaldo)
+          LEFT JOIN rak ON mutasi.id_rak = rak.id_rak
+          WHERE at_update IS NULL AND at_delete IS NULL
+      ) tujuan
+      LEFT JOIN(
+        SELECT id_detailsaldo, id AS id_asal, rak AS rak_asal, brg
+        FROM detail_saldo
+          LEFT JOIN detail_brg AS d_brg USING(id)
+          LEFT JOIN barang USING(id_brg)
+          LEFT JOIN rak USING(id_rak)
+      ) asal ON tujuan.id_detailsaldo = asal.id_detailsaldo`);
     if (!result[0].length) {
       throw new NotFoundError('Data tidak ditemukan');
     }

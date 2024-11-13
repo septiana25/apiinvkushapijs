@@ -45,11 +45,11 @@ class MutasiHandler {
   }
 
   async getMutasiHandler() {
-    // const mutasi = await this._mutasiService.getMutasi();
+    const mutasi = await this._mutasiService.getMutasi();
     return {
       status: 'success',
       data: {
-        test: 'test',
+        mutasi,
       },
     };
   }
