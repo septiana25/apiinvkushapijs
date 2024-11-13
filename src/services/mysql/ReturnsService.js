@@ -28,7 +28,7 @@ class ReturnsService {
         FROM tmp_retur
         LEFT JOIN barang USING(id_brg)
         LEFT JOIN rak USING(id_rak)
-        WHERE sisa_qty > ?
+        WHERE sisa_qty > ? AND at_delete IS NULL AND at_update IS NULL
         GROUP BY id_brg, id_rak`, [0]);
     // console.log(result[0].length);
     return result[0];
@@ -40,7 +40,7 @@ class ReturnsService {
         FROM tmp_retur
         LEFT JOIN barang USING(id_brg)
         LEFT JOIN rak USING(id_rak)
-        WHERE id_rak = ? AND sisa_qty > ?
+        WHERE id_rak = ? AND sisa_qty > ? AND at_delete IS NULL AND at_update IS NULL
         GROUP BY id_brg, id_rak`, [idRak, 0]);
     return result[0];
   }
