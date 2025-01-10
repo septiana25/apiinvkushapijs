@@ -38,7 +38,7 @@ class ItemsService {
 
   async getItemByBarcode(barcode) {
     const result = await this._conn.execute(`
-    SELECT id_brg, barcode_brg, qty AS qty_pack FROM barcodebrg WHERE barcode_brg = ?`, [barcode]);
+    SELECT id_brg, barcode_brg, qty AS qty_pack FROM barcodebrg WHERE barcode_brg = ? AND at_delete IS NULL`, [barcode]);
 
     return result[0];
   }
